@@ -1,6 +1,7 @@
 package me.hongmo.querydsl;
 
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.entity.QMember;
@@ -80,6 +81,15 @@ public class QuerydslBasicTest {
                 .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    public void resultFetch() {
+        QueryResults<Member> memberQueryResults = queryFactory
+                .selectFrom(member)
+                .fetchResults();
+
+        System.out.println(memberQueryResults.getTotal());
     }
 
 }
