@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import static me.hongmo.querydsl.entity.QMember.*;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
@@ -72,12 +73,10 @@ public class QuerydslBasicTest {
     @Test
     public void startDsl() {
 
-        QMember m = new QMember("m");
-
         Member findMember = queryFactory
-                .select(m)
-                .from(m)
-                .where(m.username.eq("member1"))
+                .select(member)
+                .from(member)
+                .where(member.username.eq("member1"))
                 .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
