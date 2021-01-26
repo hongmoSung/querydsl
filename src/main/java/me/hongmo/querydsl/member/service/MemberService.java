@@ -29,5 +29,9 @@ public class MemberService {
         return member;
     }
 
+    public List<Member> members() {
+        return memberRepository.findAll();
+    }
+
 
 }

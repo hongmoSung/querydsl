@@ -27,17 +27,23 @@ public class MemberController {
         return member;
     }
 
-//    @GetMapping("/member/{username}")
-//    @ResponseBody
-//    public List<Member> searchByUsername(@PathVariable("username") String username) {
-//        return memberService.findByUsername(username);
-//    }
+    @GetMapping("/member")
+    @ResponseBody
+    public List<Member> searchByUsername(@RequestParam(name = "username") String username) {
+        return memberService.findByUsername(username);
+    }
 
     @GetMapping("/member/{id}")
     @ResponseBody
     public Optional<Member> searchByUsername(@PathVariable("id") Long id) {
         Optional<Member> member = memberService.findById(id);
         return Optional.ofNullable(member).get();
+    }
+
+    @GetMapping("/member/list")
+    @ResponseBody
+    public List<Member> members() {
+        return memberService.members();
     }
 
 }
