@@ -3,10 +3,13 @@ package me.hongmo.querydsl.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "username", "age"})
 public class Member {
@@ -17,26 +20,23 @@ public class Member {
     private Long id;
     private String username;
     private int age;
+    private String password;
+    private boolean activated;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id") // 외래키
     private Team team;
 
-    public Member(String username) {
-        this(username, 0);
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "member_authority",
+            joinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "member_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
+    private Set<Authority> authorities;
 
     public Member(String username, int age) {
         this.username = username;
         this.age = age;
-    }
-
-    public Member(String username, int age, Team team) {
-        this.username = username;
-        this.age = age;
-        if (team != null) {
-            changeTeam(team);
-        }
     }
 
     private void changeTeam(Team team) {

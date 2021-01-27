@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 public class MemberDto {
 
     private String username;
-    private int age;
+//    private int age;
+    private String password;
 
 }

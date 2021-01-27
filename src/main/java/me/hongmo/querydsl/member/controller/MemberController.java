@@ -4,6 +4,7 @@ import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.dto.MemberDto;
 import me.hongmo.querydsl.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,8 @@ public class MemberController {
     }
 
     @PostMapping("/member/save")
-    @ResponseBody
-    public MemberDto save(@RequestBody MemberDto member) {
-        memberService.join(member);
-        return member;
+    public ResponseEntity<Member> save(@RequestBody MemberDto member) {
+        return ResponseEntity.ok(memberService.signup(member));
     }
 
     @GetMapping("/member")
