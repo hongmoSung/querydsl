@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -40,11 +41,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/favicon.ico", "/error");
+                .antMatchers("/error");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http
+                .cors()
+                .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+
         http
                 .csrf().disable()
                 .exceptionHandling()
