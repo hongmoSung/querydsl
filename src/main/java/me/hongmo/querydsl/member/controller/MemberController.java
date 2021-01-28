@@ -43,10 +43,5 @@ public class MemberController {
     public ResponseEntity<List<Member>> members() {
         return ResponseEntity.ok(memberService.members());
     }
-//    @GetMapping("/member/list")
-//    @ResponseBody
-//    public List<Member> members() {
-//        return memberService.members();
-//    }
 
 }
