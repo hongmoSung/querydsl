@@ -3,6 +3,8 @@ package me.hongmo.querydsl.member.service;
 import me.hongmo.querydsl.entity.Authority;
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.dto.MemberDto;
+import me.hongmo.querydsl.member.dto.ReqMemberDTO;
+import me.hongmo.querydsl.member.dto.ResMemberDto;
 import me.hongmo.querydsl.member.repo.MemberRepository;
 import me.hongmo.querydsl.util.SecurityUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,8 +31,8 @@ public class MemberService {
 //        memberRepository.save(m);
 //    }
 
-    public List<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
+    public Optional<ResMemberDto> findByUsername(String username) {
+        return Optional.ofNullable(memberRepository.searchByUsername(username));
     }
 
     public Optional<Member> findById(Long id) {
@@ -40,6 +42,10 @@ public class MemberService {
 
     public List<Member> members() {
         return memberRepository.findAll();
+    }
+
+    public Long memberUpdate(ReqMemberDTO memberDto) {
+        return memberRepository.updateUser(memberDto);
     }
 
     //

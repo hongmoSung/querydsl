@@ -1,10 +1,13 @@
 package me.hongmo.querydsl.member.repo;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import me.hongmo.querydsl.member.dto.MemberSearchDto;
-import me.hongmo.querydsl.member.dto.MemberTeamDto;
-import me.hongmo.querydsl.member.dto.QMemberTeamDto;
+import me.hongmo.querydsl.entity.Member;
+import me.hongmo.querydsl.entity.QTeam;
+import me.hongmo.querydsl.entity.Team;
+import me.hongmo.querydsl.member.dto.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -48,5 +51,35 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .leftJoin(member.team, team)
                 .where(builder)
                 .fetch();
+    }
+
+    @Override
+    public ResMemberDto searchByUsername(String username) {
+        ResMemberDto m = queryFactory
+                .select(Projections.bean(
+                        ResMemberDto.class,
+                        member.id,
+                        member.username,
+                        team.id.as("teamId")
+                        )
+                )
+                .from(member)
+                .join(member.team, team)
+                .where(member.username.eq(username))
+                .fetchOne();
+        return m;
+    }
+
+    @Override
+    @Transactional
+    public Long updateUser(ReqMemberDTO memberDTO) {
+        Team team = queryFactory.selectFrom(QTeam.team).where(QTeam.team.id.eq(memberDTO.getTeamId())).fetchOne();
+        long execute = queryFactory
+                .update(member)
+                .where(member.id.eq(memberDTO.getId()))
+                .set(member.username, memberDTO.getUsername())
+                .set(member.team, team)
+                .execute();
+        return execute;
     }
 }

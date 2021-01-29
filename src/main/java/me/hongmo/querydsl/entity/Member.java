@@ -37,7 +37,7 @@ public class Member {
     private Set<Authority> authorities;
 
     @OneToMany(mappedBy = "member")
-    List<Board> boars = new ArrayList<>();
+    List<Board> boards = new ArrayList<>();
 
     public Member(String username, int age) {
         this.username = username;

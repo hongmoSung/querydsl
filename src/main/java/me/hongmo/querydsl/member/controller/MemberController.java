@@ -2,6 +2,8 @@ package me.hongmo.querydsl.member.controller;
 
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.dto.MemberDto;
+import me.hongmo.querydsl.member.dto.ReqMemberDTO;
+import me.hongmo.querydsl.member.dto.ResMemberDto;
 import me.hongmo.querydsl.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +28,24 @@ public class MemberController {
         return ResponseEntity.ok(memberService.signup(member));
     }
 
-    @GetMapping("/member")
+    @GetMapping("/member/{username}")
     @ResponseBody
-    public List<Member> searchByUsername(@RequestParam(name = "username") String username) {
-        return memberService.findByUsername(username);
+    public ResponseEntity<ResMemberDto> searchByUsername(@PathVariable("username") String username) {
+        return ResponseEntity.ok(memberService.findByUsername(username).get());
     }
 
-    @GetMapping("/member/{id}")
-    @ResponseBody
-    public Optional<Member> searchByUsername(@PathVariable("id") Long id) {
-        Optional<Member> member = memberService.findById(id);
-        return Optional.ofNullable(member).get();
+    @PostMapping("/member/update")
+    public ResponseEntity<Long> updateMember(@RequestBody ReqMemberDTO memberDTO) {
+        System.out.println(memberDTO);
+        return ResponseEntity.ok(memberService.memberUpdate(memberDTO));
     }
+
+//    @GetMapping("/member/{id}")
+//    @ResponseBody
+//    public Optional<Member> searchByUsername(@PathVariable("id") Long id) {
+//        Optional<Member> member = memberService.findById(id);
+//        return Optional.ofNullable(member).get();
+//    }
 
     @GetMapping("/member/list")
     public ResponseEntity<List<Member>> members() {
