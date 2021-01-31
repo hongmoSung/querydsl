@@ -2,22 +2,24 @@ package me.hongmo.querydsl.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import javax.jdo.annotations.Unique;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "authority")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Authority {
 
-    @Id
-    @Column(name = "authority_name", length = 50)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long authorityId;
+    @Column(name = "authority_name", unique = true)
     private String authorityName;
+
+    @OneToMany(mappedBy = "authority")
+    List<Member> members = new ArrayList<>();
 }

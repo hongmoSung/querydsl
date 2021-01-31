@@ -1,5 +1,6 @@
 package me.hongmo.querydsl.member.service;
 
+import me.hongmo.querydsl.authority.repo.AuthorityRepository;
 import me.hongmo.querydsl.entity.Authority;
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.dto.MemberDto;
@@ -11,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +20,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthorityRepository authorityRepository;
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authorityRepository = authorityRepository;
     }
 
 //    public void join(MemberDto memberDto) {
@@ -55,15 +57,18 @@ public class MemberService {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
+        final Authority authority = authorityRepository.findByAuthorityName("ROLE_USER");
+
         //빌더 패턴의 장점
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
+//        Authority authority = Authority.builder()
+//                .authorityName("ROLE_USER")
+//                .build();
 
         Member member = Member.builder()
                 .username(memberDto.getUsername())
                 .password(passwordEncoder.encode(memberDto.getPassword()))
-                .authorities(Collections.singleton(authority))
+                .authority(authority)
+//                .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
 

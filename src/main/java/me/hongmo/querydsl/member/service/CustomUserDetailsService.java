@@ -1,5 +1,6 @@
 package me.hongmo.querydsl.member.service;
 
+import me.hongmo.querydsl.entity.Authority;
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.repo.MemberRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +37,14 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
         }
 
-        List<GrantedAuthority> grantedAuthorities = member.getAuthorities().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
-                .collect(Collectors.toList());
+        final String authorityName = member.getAuthority().getAuthorityName();
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority(authorityName));
+
+//        List<GrantedAuthority> grantedAuthorities = member.getAuthorities().stream()
+//                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
+//                .collect(Collectors.toList());
 
         return new User(member.getUsername(), member.getPassword(), grantedAuthorities);
     }
