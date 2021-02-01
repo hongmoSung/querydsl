@@ -3,13 +3,13 @@ package me.hongmo.querydsl.member.repo;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.entity.QTeam;
 import me.hongmo.querydsl.entity.Team;
 import me.hongmo.querydsl.member.dto.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static me.hongmo.querydsl.entity.QMember.member;
@@ -41,7 +41,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         }
         return queryFactory
                 .select(new QMemberTeamDto(
-                        member.id.as("memberId"),
+                        member.memberId.as("memberId"),
                         member.username,
                         member.age,
                         team.id.as("teamId"),
@@ -58,13 +58,13 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         ResMemberDto m = queryFactory
                 .select(Projections.bean(
                         ResMemberDto.class,
-                        member.id,
+                        member.memberId,
                         member.username,
                         team.id.as("teamId")
                         )
                 )
                 .from(member)
-                .join(member.team, team)
+                .leftJoin(member.team, team)
                 .where(member.username.eq(username))
                 .fetchOne();
         return m;
@@ -76,9 +76,10 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         Team team = queryFactory.selectFrom(QTeam.team).where(QTeam.team.id.eq(memberDTO.getTeamId())).fetchOne();
         long execute = queryFactory
                 .update(member)
-                .where(member.id.eq(memberDTO.getId()))
+                .where(member.memberId.eq(memberDTO.getMemberId()))
                 .set(member.username, memberDTO.getUsername())
                 .set(member.team, team)
+                .set(member.updateDate, LocalDateTime.now())
                 .execute();
         return execute;
     }

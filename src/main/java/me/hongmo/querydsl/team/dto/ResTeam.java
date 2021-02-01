@@ -6,4 +6,5 @@ import lombok.Data;
 public class ResTeam {
     private Long id;
     private String name;
+    private Long parentTeamId;
 }

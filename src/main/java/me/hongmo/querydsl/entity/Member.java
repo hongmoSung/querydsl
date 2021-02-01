@@ -2,8 +2,11 @@ package me.hongmo.querydsl.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +27,10 @@ public class Member {
     private int age;
     private String password;
     private boolean activated;
+    @CreationTimestamp
+    private LocalDateTime createDate;
+    @UpdateTimestamp
+    private LocalDateTime updateDate;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

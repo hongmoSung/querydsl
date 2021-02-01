@@ -28,13 +28,10 @@ public class MemberService {
         this.authorityRepository = authorityRepository;
     }
 
-//    public void join(MemberDto memberDto) {
-//        Member m = new Member(memberDto.getUsername(), memberDto.getPassword());
-//        memberRepository.save(m);
-//    }
-
     public Optional<ResMemberDto> findByUsername(String username) {
-        return Optional.ofNullable(memberRepository.searchByUsername(username));
+        ResMemberDto resMemberDto = memberRepository.searchByUsername(username);
+        if(resMemberDto.getTeamId() == null) resMemberDto.setTeamId(0L);
+        return Optional.ofNullable(resMemberDto);
     }
 
     public Optional<Member> findById(Long id) {
@@ -75,15 +72,15 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<Member> getUserWithAuthorities(String username) {
-        return memberRepository.findOneWithAuthoritiesByUsername(username);
-    }
+//    @Transactional(readOnly = true)
+//    public Optional<Member> getUserWithAuthorities(String username) {
+//        return memberRepository.findOneWithAuthoritiesByUsername(username);
+//    }
 
-    @Transactional(readOnly = true)
-    public Optional<Member> getMyUserWithAuthorities() {
-        return SecurityUtil.getCurrentUsername().flatMap(memberRepository::findOneWithAuthoritiesByUsername);
-    }
+//    @Transactional(readOnly = true)
+//    public Optional<Member> getMyUserWithAuthorities() {
+//        return SecurityUtil.getCurrentUsername().flatMap(memberRepository::findOneWithAuthoritiesByUsername);
+//    }
 
 
 }

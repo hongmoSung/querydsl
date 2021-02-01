@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class MemberController {
@@ -36,16 +35,8 @@ public class MemberController {
 
     @PostMapping("/member/update")
     public ResponseEntity<Long> updateMember(@RequestBody ReqMemberDTO memberDTO) {
-        System.out.println(memberDTO);
         return ResponseEntity.ok(memberService.memberUpdate(memberDTO));
     }
-
-//    @GetMapping("/member/{id}")
-//    @ResponseBody
-//    public Optional<Member> searchByUsername(@PathVariable("id") Long id) {
-//        Optional<Member> member = memberService.findById(id);
-//        return Optional.ofNullable(member).get();
-//    }
 
     @GetMapping("/member/list")
     public ResponseEntity<List<Member>> members() {

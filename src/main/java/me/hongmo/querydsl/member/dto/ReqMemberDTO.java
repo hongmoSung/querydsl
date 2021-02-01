@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ReqMemberDTO {
-    private Long Id;
+    private Long memberId;
     private String username;
     private Long teamId;
 }
