@@ -2,6 +2,7 @@ package me.hongmo.querydsl.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -30,6 +31,10 @@ public class Team {
     // 거울?
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private List<Team> subTeamList = new ArrayList<>();
 
     public Team(String name) {
         this.name = name;
