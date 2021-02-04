@@ -1,6 +1,5 @@
 package me.hongmo.querydsl.team.service;
 
-import lombok.ToString;
 import me.hongmo.querydsl.entity.Team;
 import me.hongmo.querydsl.team.dto.RequestTeam;
 import me.hongmo.querydsl.team.dto.ResTeam;
@@ -10,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,51 +48,23 @@ public class TeamService {
             tree.setTeamId(teamId);
             tree.setTitle(title);
             tree.setParentTeamId(parentTeamId);
-            tree.setPath(path);
+            tree.setKey(path);
             tree.setLevel(level);
             return tree;
         }).collect(Collectors.toList());
-// path && level로 찾기
 
-        List<String> levels = trees.stream().map(t -> t.getLevel()).distinct().sorted().collect(Collectors.toList());
-
-        levels.forEach(System.out::println);
-        List<TreeDTO> results = new ArrayList<>();
-
-        levels.stream().forEach(level -> {
-            List<TreeDTO> collect = trees.stream().filter(treeDTO -> level.equals(treeDTO.getLevel())).collect(Collectors.toList());
-            collect.forEach(treeDTO -> {
-                switch (treeDTO.getLevel()) {
-                    case "1" :
-                        results.add(treeDTO);
-                        break;
-
-                    case "2" :
-                        String path = treeDTO.getPath();
-                        String parentPath = path.substring(0, path.length() - 2);
-
-                        Optional<TreeDTO> any = results.stream().filter(t -> t.getTeamId().contains(parentPath)).findAny();
-
-                        if(any.isPresent()) {
-                            TreeDTO treeDTO1 = any.get();
-                            List<TreeDTO> children = treeDTO1.getChildren();
-                            children.add(treeDTO);
-                            treeDTO1.setChildren(children);
-                        }
-                        break;
-
-                    case "3" :
+        for(var i = 0; i < trees.size(); i++) {
+            for(var j = 0; j < trees.size(); j++) {
+                TreeDTO treeDTO = trees.get(i);
+                TreeDTO treeDTO1 = trees.get(j);
+                if(treeDTO.getTeamId().equals(treeDTO1.getParentTeamId())) {
+                    treeDTO.getChildren().add(treeDTO1);
                 }
-                if(treeDTO.getLevel().equals("1")) {
-                    results.add(treeDTO);
-                } else {
+            }
+        }
 
-//                    results.stream().flatMap(t -> t.getChildren().stream())
-                }
-            });
-        });
-
-        return results;
+        List<TreeDTO> result = trees.stream().filter(treeDTO -> treeDTO.getLevel().equals("1")).collect(Collectors.toList());
+        return result;
     }
 
 }

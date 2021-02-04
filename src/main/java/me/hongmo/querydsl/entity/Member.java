@@ -32,6 +32,9 @@ public class Member {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
+    @Column(name = "team_id", insertable = false, updatable = false)
+    private Long teamId;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id") // 외래키
