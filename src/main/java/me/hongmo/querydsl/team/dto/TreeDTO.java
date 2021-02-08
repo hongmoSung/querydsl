@@ -14,5 +14,8 @@ public class TreeDTO {
     private String title;
     private String key;
     private String level;
+    //
+    private Boolean isLeaf;
+    private String icon;
     private List<TreeDTO> children = new ArrayList<>();
 }

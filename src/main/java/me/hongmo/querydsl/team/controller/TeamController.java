@@ -1,6 +1,5 @@
 package me.hongmo.querydsl.team.controller;
 
-import me.hongmo.querydsl.entity.Team;
 import me.hongmo.querydsl.team.dto.RequestTeam;
 import me.hongmo.querydsl.team.dto.ResTeam;
 import me.hongmo.querydsl.team.dto.TreeDTO;

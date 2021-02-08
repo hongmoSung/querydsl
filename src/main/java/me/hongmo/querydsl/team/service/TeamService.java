@@ -1,6 +1,8 @@
 package me.hongmo.querydsl.team.service;
 
+import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.entity.Team;
+import me.hongmo.querydsl.member.repo.MemberRepository;
 import me.hongmo.querydsl.team.dto.RequestTeam;
 import me.hongmo.querydsl.team.dto.ResTeam;
 import me.hongmo.querydsl.team.dto.TreeDTO;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +20,8 @@ public class TeamService {
 
     @Autowired
     private TeamRepository teamRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     public Long join(RequestTeam requestTeam) {
         Team team = new Team(requestTeam.getName());
@@ -44,22 +49,44 @@ public class TeamService {
             String parentTeamId = StringUtils.trimToEmpty(team[2].toString());
             String path = StringUtils.trimToEmpty(team[3].toString());
             String level = StringUtils.trimToEmpty(team[4].toString());
+
             TreeDTO tree = new TreeDTO();
             tree.setTeamId(teamId);
             tree.setTitle(title);
             tree.setParentTeamId(parentTeamId);
             tree.setKey(path);
             tree.setLevel(level);
+            tree.setIsLeaf(false);
+
             return tree;
         }).collect(Collectors.toList());
 
+        List<Member> members = memberRepository.findAll();
+
         for(var i = 0; i < trees.size(); i++) {
             for(var j = 0; j < trees.size(); j++) {
-                TreeDTO treeDTO = trees.get(i);
-                TreeDTO treeDTO1 = trees.get(j);
-                if(treeDTO.getTeamId().equals(treeDTO1.getParentTeamId())) {
-                    treeDTO.getChildren().add(treeDTO1);
+                TreeDTO parentTree = trees.get(i);
+                TreeDTO childTree = trees.get(j);
+                if(parentTree.getTeamId().equals(childTree.getParentTeamId())) {
+                    parentTree.getChildren().add(childTree);
                 }
+            }
+        }
+
+        for(var i = 0; i < trees.size(); i++) {
+            TreeDTO treeDTO = trees.get(i);
+            List<Member> collect = members.stream().filter(m -> Long.toString(m.getTeamId()).equals(treeDTO.getTeamId())).collect(Collectors.toList());
+
+            if(collect.size() != 0) {
+                AtomicInteger number = new AtomicInteger();
+                collect.stream().forEach((member) -> {
+                    TreeDTO t = new TreeDTO();
+                    t.setTitle(member.getUsername());
+                    t.setKey(treeDTO.getKey() + number.getAndIncrement());
+                    t.setIsLeaf(true);
+                    t.setIcon("<CarryOutOutlined />");
+                    treeDTO.getChildren().add(t);
+                });
             }
         }
 
