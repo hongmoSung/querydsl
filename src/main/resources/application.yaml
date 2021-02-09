@@ -7,10 +7,11 @@ spring:
     password: root
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 #    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+#    database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     properties:
       hibernate:
 #        show_sql: true

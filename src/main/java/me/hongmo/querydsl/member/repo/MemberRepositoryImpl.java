@@ -39,6 +39,9 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         if (condition.getAgeLoe() != null) {
             builder.and(member.age.loe(condition.getAgeLoe()));
         }
+        if (hasText(condition.getTeamId())) {
+            builder.and(member.teamId.eq(Long.parseLong(condition.getTeamId())));
+        }
         return queryFactory
                 .select(new QMemberTeamDto(
                         member.memberId.as("memberId"),

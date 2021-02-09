@@ -2,6 +2,8 @@ package me.hongmo.querydsl.team.service;
 
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.entity.Team;
+import me.hongmo.querydsl.member.dto.MemberSearchDto;
+import me.hongmo.querydsl.member.dto.MemberTeamDto;
 import me.hongmo.querydsl.member.repo.MemberRepository;
 import me.hongmo.querydsl.team.dto.RequestTeam;
 import me.hongmo.querydsl.team.dto.ResTeam;
@@ -73,22 +75,24 @@ public class TeamService {
             }
         }
 
-        for(var i = 0; i < trees.size(); i++) {
-            TreeDTO treeDTO = trees.get(i);
-            List<Member> collect = members.stream().filter(m -> Long.toString(m.getTeamId()).equals(treeDTO.getTeamId())).collect(Collectors.toList());
+        // 02/08 팀원삽입 제거
 
-            if(collect.size() != 0) {
-                AtomicInteger number = new AtomicInteger();
-                collect.stream().forEach((member) -> {
-                    TreeDTO t = new TreeDTO();
-                    t.setTitle(member.getUsername());
-                    t.setKey(treeDTO.getKey() + number.getAndIncrement());
-                    t.setIsLeaf(true);
-                    t.setIcon("<CarryOutOutlined />");
-                    treeDTO.getChildren().add(t);
-                });
-            }
-        }
+//        for(var i = 0; i < trees.size(); i++) {
+//            TreeDTO treeDTO = trees.get(i);
+//            List<Member> collect = members.stream().filter(m -> Long.toString(m.getTeamId()).equals(treeDTO.getTeamId())).collect(Collectors.toList());
+//
+//            if(collect.size() != 0) {
+//                AtomicInteger number = new AtomicInteger();
+//                collect.stream().forEach((member) -> {
+//                    TreeDTO t = new TreeDTO();
+//                    t.setTitle(member.getUsername());
+//                    t.setKey(treeDTO.getKey() + number.getAndIncrement());
+//                    t.setIsLeaf(true);
+//                    t.setIcon("<CarryOutOutlined />");
+//                    treeDTO.getChildren().add(t);
+//                });
+//            }
+//        }
 
         List<TreeDTO> result = trees.stream().filter(treeDTO -> treeDTO.getLevel().equals("1")).collect(Collectors.toList());
         return result;

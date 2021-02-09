@@ -17,7 +17,7 @@ public class Authority {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long authorityId;
-    @Column(name = "authority_name", unique = true)
+    @Column(name = "authority_name", nullable = false)
     private String authorityName;
 
     @OneToMany(mappedBy = "authority")
