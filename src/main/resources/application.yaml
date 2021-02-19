@@ -11,12 +11,15 @@ spring:
 #    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
 #    database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
 #        show_sql: true
         format_sql: true
         use_sql_comments: true
+  mvc:
+    converters:
+      preferred-json-mapper: gson
 
 logging.level:
   org.hibernate.SQL: trace

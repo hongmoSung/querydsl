@@ -1,11 +1,14 @@
 package me.hongmo.querydsl.member.service;
 
+import com.google.gson.JsonObject;
+import com.microsoft.graph.models.extensions.IGraphServiceClient;
+import com.microsoft.graph.requests.extensions.IUserCollectionPage;
+import lombok.RequiredArgsConstructor;
 import me.hongmo.querydsl.authority.repo.AuthorityRepository;
 import me.hongmo.querydsl.entity.Authority;
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.dto.*;
 import me.hongmo.querydsl.member.repo.MemberRepository;
-import me.hongmo.querydsl.util.SecurityUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,17 +17,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
-
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
-        this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authorityRepository = authorityRepository;
-    }
+    private final IGraphServiceClient graphServiceClient;
 
     public Optional<ResMemberDto> findByUsername(String username) {
         ResMemberDto resMemberDto = memberRepository.searchByUsername(username);
@@ -85,6 +84,22 @@ public class MemberService {
                 .teamId(teamId)
                 .build();
         return memberRepository.search(condition);
+    }
+
+    public JsonObject graphMembers() {
+        return graphServiceClient
+                .users()
+                .buildRequest()
+                .get()
+                .getRawObject();
+    }
+
+    public JsonObject graphGroups() {
+        return graphServiceClient
+                .groups()
+                .buildRequest()
+                .get()
+                .getRawObject();
     }
 
 
