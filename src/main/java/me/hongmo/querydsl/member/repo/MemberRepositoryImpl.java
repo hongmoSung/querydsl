@@ -33,12 +33,12 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         if (hasText(condition.getTeamName())) {
             builder.and(team.name.eq(condition.getTeamName()));
         }
-        if (condition.getAgeGoe() != null) {
-            builder.and(member.age.goe(condition.getAgeGoe()));
-        }
-        if (condition.getAgeLoe() != null) {
-            builder.and(member.age.loe(condition.getAgeLoe()));
-        }
+//        if (condition.getAgeGoe() != null) {
+//            builder.and(member.age.goe(condition.getAgeGoe()));
+//        }
+//        if (condition.getAgeLoe() != null) {
+//            builder.and(member.age.loe(condition.getAgeLoe()));
+//        }
         if (hasText(condition.getTeamId())) {
             builder.and(member.teamId.eq(Long.parseLong(condition.getTeamId())));
         }
@@ -46,7 +46,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .select(new QMemberTeamDto(
                         member.memberId.as("memberId"),
                         member.username,
-                        member.age,
                         team.id.as("teamId"),
                         team.name.as("teamName")
                 ))

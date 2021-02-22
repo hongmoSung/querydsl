@@ -23,9 +23,14 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
     private String username;
-    private int age;
     private String password;
     private boolean activated;
+    //
+    private String aadid;
+    private String mail;
+    private String displayName;
+    private String userPrincipalName;
+
     @CreationTimestamp
     private LocalDateTime createDate;
     @UpdateTimestamp

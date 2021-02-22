@@ -13,8 +13,8 @@ import javax.validation.constraints.Size;
 public class LoginDto {
 
     @NotNull
-    private String username;
+    private String accountIdentifier;
 
     @NotNull
-    private String password;
+    private String userName;
 }
