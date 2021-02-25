@@ -2,7 +2,6 @@ package me.hongmo.querydsl.member.service;
 
 import com.google.gson.JsonObject;
 import com.microsoft.graph.models.extensions.IGraphServiceClient;
-import com.microsoft.graph.requests.extensions.IUserCollectionPage;
 import lombok.RequiredArgsConstructor;
 import me.hongmo.querydsl.authority.repo.AuthorityRepository;
 import me.hongmo.querydsl.entity.Authority;
@@ -44,25 +43,18 @@ public class MemberService {
         return memberRepository.updateUser(memberDto);
     }
 
-    //
     @Transactional
     public Member signup(MemberDto memberDto) {
-        if (memberRepository.findOneWithAuthoritiesByUsername(memberDto.getUsername()).orElse(null) != null) {
+        if (memberRepository.findOneWithAuthoritiesByAadid(memberDto.getUsername()).orElse(null) != null) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
 
         final Authority authority = authorityRepository.findByAuthorityName("ROLE_USER");
 
-        //빌더 패턴의 장점
-//        Authority authority = Authority.builder()
-//                .authorityName("ROLE_USER")
-//                .build();
-
         Member member = Member.builder()
                 .username(memberDto.getUsername())
                 .password(passwordEncoder.encode(memberDto.getPassword()))
                 .authority(authority)
-//                .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();
 

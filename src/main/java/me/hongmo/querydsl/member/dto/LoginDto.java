@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class LoginDto {
 
     @NotNull

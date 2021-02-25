@@ -1,5 +1,6 @@
 package me.hongmo.querydsl.member.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import me.hongmo.querydsl.member.dto.LoginDto;
 import me.hongmo.querydsl.member.dto.TokenDto;
 import me.hongmo.querydsl.token.JwtFilter;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class AuthController {
@@ -33,6 +35,7 @@ public class AuthController {
     @PostMapping("/authenticate")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
 
+        log.info("login info {}", loginDto.toString());
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getAccountIdentifier(), loginDto.getUserName());
 

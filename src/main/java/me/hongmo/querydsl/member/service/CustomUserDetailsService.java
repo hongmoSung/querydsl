@@ -1,6 +1,6 @@
 package me.hongmo.querydsl.member.service;
 
-import me.hongmo.querydsl.entity.Authority;
+import lombok.extern.slf4j.Slf4j;
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.repo.MemberRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,10 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Component("userDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
+
     private final MemberRepository memberRepository;
 
     public CustomUserDetailsService(MemberRepository memberRepository) {
@@ -26,16 +27,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(final String username) {
-        return memberRepository.findOneWithAuthoritiesByUsername(username)
-                .map(user -> createUser(username, user))
-                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+    public UserDetails loadUserByUsername(final String aadid) {
+        return memberRepository.findOneWithAuthoritiesByAadid(aadid)
+                .map(user -> createUser(aadid, user))
+                .orElseThrow(() -> new UsernameNotFoundException(aadid + " -> 데이터베이스에서 찾을 수 없습니다."));
     }
 
-    private User createUser(String username, Member member) {
-        if (!member.isActivated()) {
-            throw new RuntimeException(username + " -> 활성화되어 있지 않습니다.");
-        }
+    private User createUser(String aadid, Member member) {
 
         final String authorityName = member.getAuthority().getAuthorityName();
 
@@ -46,6 +44,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 //                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
 //                .collect(Collectors.toList());
 
-        return new User(member.getUsername(), member.getPassword(), grantedAuthorities);
+        return new User(member.getAadid(), member.getPassword(), grantedAuthorities);
     }
 }
