@@ -12,7 +12,10 @@ public class TreeDTO {
     private String teamId;
     private String parentTeamId;
     private String title;
-    private String path;
+    private String key;
     private String level;
+    //
+    private Boolean isLeaf;
+    private String icon;
     private List<TreeDTO> children = new ArrayList<>();
 }

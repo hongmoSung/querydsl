@@ -33,12 +33,20 @@ dependencies {
 	runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
 	runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 	//
-	compile  'org.apache.commons:commons-lang3:3.11'
+	compile 'org.apache.commons:commons-lang3:3.11'
+
+	// azure
+	implementation 'com.microsoft.azure:msal4j:1.8.0'
+	implementation 'com.microsoft.graph:microsoft-graph:2.5.0'
+	implementation 'com.microsoft.graph:microsoft-graph-auth:0.2.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compile 'mysql:mysql-connector-java'
 //	runtimeOnly 'com.h2database:h2'
+	//
+	implementation 'com.google.code.gson:gson:2.8.6'
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

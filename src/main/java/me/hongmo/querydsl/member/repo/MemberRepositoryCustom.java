@@ -1,6 +1,5 @@
 package me.hongmo.querydsl.member.repo;
 
-import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.dto.MemberSearchDto;
 import me.hongmo.querydsl.member.dto.MemberTeamDto;
 import me.hongmo.querydsl.member.dto.ReqMemberDTO;

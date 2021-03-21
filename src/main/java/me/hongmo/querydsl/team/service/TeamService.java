@@ -1,6 +1,8 @@
 package me.hongmo.querydsl.team.service;
 
+import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.entity.Team;
+import me.hongmo.querydsl.member.repo.MemberRepository;
 import me.hongmo.querydsl.team.dto.RequestTeam;
 import me.hongmo.querydsl.team.dto.ResTeam;
 import me.hongmo.querydsl.team.dto.TreeDTO;
@@ -9,9 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +19,8 @@ public class TeamService {
 
     @Autowired
     private TeamRepository teamRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     public Long join(RequestTeam requestTeam) {
         Team team = new Team(requestTeam.getName());
@@ -46,55 +48,51 @@ public class TeamService {
             String parentTeamId = StringUtils.trimToEmpty(team[2].toString());
             String path = StringUtils.trimToEmpty(team[3].toString());
             String level = StringUtils.trimToEmpty(team[4].toString());
+
             TreeDTO tree = new TreeDTO();
             tree.setTeamId(teamId);
             tree.setTitle(title);
             tree.setParentTeamId(parentTeamId);
-            tree.setPath(path);
+            tree.setKey(path);
             tree.setLevel(level);
+            tree.setIsLeaf(false);
+
             return tree;
         }).collect(Collectors.toList());
-// path && level로 찾기
 
-        List<String> levels = trees.stream().map(t -> t.getLevel()).distinct().sorted().collect(Collectors.toList());
+        List<Member> members = memberRepository.findAll();
 
-        levels.forEach(System.out::println);
-        List<TreeDTO> results = new ArrayList<>();
-
-        levels.stream().forEach(level -> {
-            List<TreeDTO> collect = trees.stream().filter(treeDTO -> level.equals(treeDTO.getLevel())).collect(Collectors.toList());
-            collect.forEach(treeDTO -> {
-                switch (treeDTO.getLevel()) {
-                    case "1" :
-                        results.add(treeDTO);
-                        break;
-
-                    case "2" :
-                        String path = treeDTO.getPath();
-                        String parentPath = path.substring(0, path.length() - 2);
-
-                        Optional<TreeDTO> any = results.stream().filter(t -> t.getTeamId().contains(parentPath)).findAny();
-
-                        if(any.isPresent()) {
-                            TreeDTO treeDTO1 = any.get();
-                            List<TreeDTO> children = treeDTO1.getChildren();
-                            children.add(treeDTO);
-                            treeDTO1.setChildren(children);
-                        }
-                        break;
-
-                    case "3" :
+        for(var i = 0; i < trees.size(); i++) {
+            for(var j = 0; j < trees.size(); j++) {
+                TreeDTO parentTree = trees.get(i);
+                TreeDTO childTree = trees.get(j);
+                if(parentTree.getTeamId().equals(childTree.getParentTeamId())) {
+                    parentTree.getChildren().add(childTree);
                 }
-                if(treeDTO.getLevel().equals("1")) {
-                    results.add(treeDTO);
-                } else {
+            }
+        }
 
-//                    results.stream().flatMap(t -> t.getChildren().stream())
-                }
-            });
-        });
+        // 02/08 팀원삽입 제거
 
-        return results;
+//        for(var i = 0; i < trees.size(); i++) {
+//            TreeDTO treeDTO = trees.get(i);
+//            List<Member> collect = members.stream().filter(m -> Long.toString(m.getTeamId()).equals(treeDTO.getTeamId())).collect(Collectors.toList());
+//
+//            if(collect.size() != 0) {
+//                AtomicInteger number = new AtomicInteger();
+//                collect.stream().forEach((member) -> {
+//                    TreeDTO t = new TreeDTO();
+//                    t.setTitle(member.getUsername());
+//                    t.setKey(treeDTO.getKey() + number.getAndIncrement());
+//                    t.setIsLeaf(true);
+//                    t.setIcon("<CarryOutOutlined />");
+//                    treeDTO.getChildren().add(t);
+//                });
+//            }
+//        }
+
+        List<TreeDTO> result = trees.stream().filter(treeDTO -> treeDTO.getLevel().equals("1")).collect(Collectors.toList());
+        return result;
     }
 
 }

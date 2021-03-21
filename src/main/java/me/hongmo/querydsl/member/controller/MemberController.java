@@ -1,7 +1,10 @@
 package me.hongmo.querydsl.member.controller;
 
+import com.google.gson.JsonObject;
+import com.microsoft.graph.requests.extensions.IUserCollectionPage;
 import me.hongmo.querydsl.entity.Member;
 import me.hongmo.querydsl.member.dto.MemberDto;
+import me.hongmo.querydsl.member.dto.MemberTeamDto;
 import me.hongmo.querydsl.member.dto.ReqMemberDTO;
 import me.hongmo.querydsl.member.dto.ResMemberDto;
 import me.hongmo.querydsl.member.service.MemberService;
@@ -41,6 +44,24 @@ public class MemberController {
     @GetMapping("/member/list")
     public ResponseEntity<List<Member>> members() {
         return ResponseEntity.ok(memberService.members());
+    }
+
+    @GetMapping("/member/team/{teamId}")
+    @ResponseBody
+    public ResponseEntity<List<MemberTeamDto>> findByTeamId(@PathVariable("teamId") String teamId) {
+        return ResponseEntity.ok(memberService.searchMembersByTeamId(teamId));
+    }
+
+    @GetMapping("/member/graph/users")
+    @ResponseBody
+    public ResponseEntity<JsonObject> graphUsers() {
+        return ResponseEntity.ok(memberService.graphMembers());
+    }
+
+    @GetMapping("/member/graph/groups")
+    @ResponseBody
+    public ResponseEntity<JsonObject> graphGroups() {
+        return ResponseEntity.ok(memberService.graphGroups());
     }
 
 }

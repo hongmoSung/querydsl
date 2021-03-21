@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -31,6 +30,9 @@ public class Member {
     private LocalDateTime createDate;
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @Column(name = "team_id", insertable = false, updatable = false)
+    private Long teamId;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

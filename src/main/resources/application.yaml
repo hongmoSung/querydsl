@@ -7,8 +7,9 @@ spring:
     password: root
 
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 #    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
-    database-platform: org.hibernate.dialect.MySQL5Dialect
+#    database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: validate
     properties:
@@ -16,6 +17,9 @@ spring:
 #        show_sql: true
         format_sql: true
         use_sql_comments: true
+  mvc:
+    converters:
+      preferred-json-mapper: gson
 
 logging.level:
   org.hibernate.SQL: trace
