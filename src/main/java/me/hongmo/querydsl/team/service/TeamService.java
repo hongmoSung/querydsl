@@ -1,6 +1,5 @@
 package me.hongmo.querydsl.team.service;
 
-import lombok.ToString;
 import me.hongmo.querydsl.entity.Team;
 import me.hongmo.querydsl.team.dto.RequestTeam;
 import me.hongmo.querydsl.team.dto.ResTeam;
@@ -10,8 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
